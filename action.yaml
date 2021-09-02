@@ -1,0 +1,25 @@
+name: 'Trybe EKS Rollback'
+author: 'Trybe'
+description: 'Esta GitHub Action é utilizada para fazer rollback de aplicações em Elastic Kubernetes Service (EKS).'
+inputs:
+  clusterName:
+    description: 'Nome do cluster EKS aonde será realizado o rollback.'
+    required: true
+  awsRegion:
+    description: 'Região da AWS do cluster EKS.'
+    required: true
+  timeout:
+    required: false
+    description: 'Tempo em segundos para esperar pelo health check da aplicação responder.'
+    default: "120s"
+
+runs:
+  using: 'composite'
+  steps:
+    - id: job
+      shell: bash
+      run: ${{ github.action_path }}/rollback.sh
+      env:
+        EKS_CLUSTER: ${{ inputs.clusterName }}
+        AWS_REGION: ${{ inputs.awsRegion }}
+        TIMEOUT: ${{ inputs.timeout }}
